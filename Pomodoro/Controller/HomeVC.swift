@@ -1,5 +1,5 @@
 //
-//  FirstViewController.swift
+//  HomeVC.swift
 //  Pomodoro
 //
 //  Created by Adriana González Martínez on 1/16/19.
@@ -23,7 +23,6 @@ class HomeVC: UIViewController {
     
     let messageLabel: UILabel = {
         let label = UILabel()
-        label.text = "You have completed 0 cycles today"
         return label
     }()
     
@@ -36,7 +35,8 @@ class HomeVC: UIViewController {
         btn.layer.masksToBounds = true
         return btn
     }()
-        
+    
+    
     deinit {
         //TODO: Remove observers
         
@@ -48,17 +48,24 @@ class HomeVC: UIViewController {
         setup()
         setLabel()
         
+        startBtn.addTarget(self, action: #selector(openTimer), for: .touchUpInside)
+        
         //TODO: Add observers
-        
-        
     }
     
+    //MARK: Notifications
+
     @objc func receivedNotification(_ notification:Notification) {
         // TODO: Update value of completed cycles
         // TODO: Update message label
-        
     }
     
+    //MARK: Navigation
+    @objc func openTimer(){
+        self.navigationController?.pushViewController(TimerVC(), animated: true)
+    }
+    
+    //MARK: Create UI
     func setup(){
         self.view.backgroundColor = UIColor.white
         self.view.addSubview(contentStack)
@@ -74,10 +81,8 @@ class HomeVC: UIViewController {
         let firstString = NSMutableAttributedString(string: "You have compelted ")
         let secondString = NSAttributedString(string: "\(completedCycles)", attributes: highlightAttributes)
         let thirdString = NSAttributedString(string: " cycles today")
-
         firstString.append(secondString)
         firstString.append(thirdString)
-        
         messageLabel.attributedText = firstString
     }
 }

@@ -10,12 +10,30 @@ import UIKit
 
 class TomatoesView: UIView {
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
+    @IBOutlet var contentView: UIView!
+    @IBOutlet var tomatoImages : [UIImageView]!
 
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setup(){
+        Bundle.main.loadNibNamed("TomatoesView", owner: self, options: nil)
+        addSubview(contentView)
+        contentView.frame = self.bounds
+        contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    }
+    
+    func updateTomatoes(to tomatoes: Int) {
+        var currentTomato = 1
+        for tomatoIcon in tomatoImages {
+            tomatoIcon.alpha = currentTomato <= tomatoes ? 1.0 : 0.2
+            currentTomato += 1
+        }
+    }
 }

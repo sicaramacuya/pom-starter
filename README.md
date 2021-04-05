@@ -12,3 +12,4 @@ Download the starter app that serves as a time tracker for the Pomodoro techniqu
 - When the user leaves the timer screen they should see how many cycles they completed for the day.
 
 
+![pomodoro-ui](pomodoro-ui.png)
