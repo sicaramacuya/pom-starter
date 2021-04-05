@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class TimerVC: UIViewController {
     
     // There are two types of time intervals:
     //   1. Pomodoro: working on a task for 25 minutes without interruptions
