@@ -78,7 +78,7 @@ class HomeVC: UIViewController {
     
     func setLabel(){
         let highlightAttributes = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16), NSAttributedString.Key.foregroundColor: UIColor.systemIndigo]
-        let firstString = NSMutableAttributedString(string: "You have compelted ")
+        let firstString = NSMutableAttributedString(string: "You have completed ")
         let secondString = NSAttributedString(string: "\(completedCycles)", attributes: highlightAttributes)
         let thirdString = NSAttributedString(string: " cycles today")
         firstString.append(secondString)
