@@ -22,6 +22,7 @@ class TimerVC: UIViewController {
         let label = UILabel()
         label.text = CycleStatus.restart.rawValue
         label.textAlignment = .center
+        label.numberOfLines = 0
         return label
     }()
     
@@ -35,7 +36,7 @@ class TimerVC: UIViewController {
     
     let startPauseButton: UIButton = {
         let btn = UIButton()
-        btn.setTitle("START", for: .normal)
+        btn.setTitle("Start", for: .normal)
         btn.setTitleColor(UIColor.white, for: .normal)
         btn.backgroundColor = UIColor.systemIndigo
         btn.layer.cornerRadius = 10
@@ -47,13 +48,23 @@ class TimerVC: UIViewController {
         let btn = UIButton()
         btn.setTitle("Reset", for: .normal)
         btn.setTitleColor(UIColor.lightGray, for: .normal)
+        btn.backgroundColor = UIColor.systemPink
+        btn.layer.cornerRadius = 10
+        btn.layer.masksToBounds = true
+        btn.setTitleColor(UIColor.white, for: .normal)
         return btn
     }()
     
-    let closeButton: UIButton = {
+    @objc let closeButton: UIButton = {
         let btn = UIButton()
         btn.setTitle("Close", for: .normal)
         btn.setTitleColor(UIColor.lightGray, for: .normal)
+        btn.backgroundColor = UIColor.systemRed
+        btn.layer.cornerRadius = 10
+        btn.layer.masksToBounds = true
+        btn.setTitleColor(UIColor.white, for: .normal)
+
+        
         return btn
     }()
     
@@ -81,11 +92,18 @@ class TimerVC: UIViewController {
         super.viewDidLoad()
         setup()
         //TODO: Set button actions for startPauseButton, resetButton and closeButton
+        startPauseButton.addTarget(self, action: #selector(startPauseButtonPressed(_:)), for: .touchUpInside)
+        resetButton.addTarget(self, action: #selector(resetButtonPressed(_:)), for: .touchUpInside)
+        closeButton.addTarget(self, action: #selector(closeButton(_:)), for: .touchUpInside)
         
         resetAll()
     }
     
     // MARK: Button Actions
+    
+    @objc func closeButton(_ sender: UIButton) {
+        navigationController?.popViewController(animated: true)
+    }
     
     @objc func startPauseButtonPressed(_ sender: UIButton) {
         if timer.isValid {
@@ -93,20 +111,26 @@ class TimerVC: UIViewController {
          // TODO: Change the button’s title to “Continue”
          // TODO: Enable the reset button
          // TODO: Pause the timer, call the method pauseTimer
-            
+            sender.setTitle("Continue", for: .normal)
+            resetButton.isEnabled = true
+            pauseTimer()
            
         } else {
          // Timer stopped or hasn't started
          // TODO: Change the button’s title to “Pause”
          // TODO: Disable the Reset button
+            sender.setTitle("Pause", for: .normal)
+            resetButton.isEnabled = false
             
             if currentInterval == 0 && timeRemaining == pomodoroDuration {
                 // We are at the start of a cycle
                 // TODO: begin the cycle of intervals
+                startNextInterval()
                 
             } else {
                 // We are in the middle of a cycle
                 // TODO: Resume the timer.
+                startTimer()
                 
             }
         }
@@ -117,6 +141,7 @@ class TimerVC: UIViewController {
             timer.invalidate()
         }
         //TODO: call the reset method
+        resetAll()
     }
 
     // MARK: Create UI
@@ -126,6 +151,7 @@ class TimerVC: UIViewController {
         self.view.addSubview(contentStack)
         contentStack.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         contentStack.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        contentStack.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.8).isActive = true
         contentStack.addArrangedSubview(messageLabel)
         contentStack.addArrangedSubview(timeLabel)
         contentStack.addArrangedSubview(tomatoesView)
@@ -149,7 +175,7 @@ class TimerVC: UIViewController {
     
     func startTimer() {
         //TODO: create the timer, the action called should be runTimer()
-        
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(runTimer), userInfo: nil, repeats: true)
     }
     
     @objc func runTimer() {
@@ -197,6 +223,7 @@ class TimerVC: UIViewController {
         } else {
             // If all intervals are complete, reset all.
             // TODO: Post Notification
+            NotificationCenter.default.post(name: Notification.Name("receivedNotification"), object: self)
             resetAll()
         }
     }

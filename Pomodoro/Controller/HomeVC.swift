@@ -39,7 +39,9 @@ class HomeVC: UIViewController {
     
     deinit {
         //TODO: Remove observers
-        
+        NotificationCenter.default.removeObserver(self,
+                                                  name: Notification.Name("receivedNotification"),
+                                                  object: nil)
     }
     
     override func viewDidLoad() {
@@ -51,13 +53,19 @@ class HomeVC: UIViewController {
         startBtn.addTarget(self, action: #selector(openTimer), for: .touchUpInside)
         
         //TODO: Add observers
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(receivedNotification(_:)),
+                                               name: Notification.Name("receivedNotification"),
+                                               object: nil)
     }
     
     //MARK: Notifications
 
-    @objc func receivedNotification(_ notification:Notification) {
+    @objc func receivedNotification(_ notification: Notification) {
         // TODO: Update value of completed cycles
         // TODO: Update message label
+         self.completedCycles += 1
+        setLabel()
     }
     
     //MARK: Navigation
@@ -71,6 +79,7 @@ class HomeVC: UIViewController {
         self.view.addSubview(contentStack)
         contentStack.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         contentStack.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        contentStack.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.8).isActive = true
         contentStack.addArrangedSubview(startBtn)
         startBtn.heightAnchor.constraint(equalToConstant: 45).isActive = true
         contentStack.addArrangedSubview(messageLabel)
